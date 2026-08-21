@@ -893,6 +893,40 @@ def estimate_current_load(
 
 
 # ============================================================
+# AUTOMATIC TRAFFIC LEVEL
+# ============================================================
+
+def calculate_traffic_level(current_speed, free_flow_speed):
+    """
+    Estimate traffic congestion from current speed compared
+    with the normal/free-flow road speed.
+
+    Returns:
+        traffic_score: congestion score from 0 to 100
+        traffic_level: Low / Medium / High / Very High
+    """
+
+    if free_flow_speed <= 0:
+        return 0.0, "Unknown"
+
+    congestion = 1 - (current_speed / free_flow_speed)
+
+    # Keep the score safely between 0 and 100.
+    traffic_score = np.clip(congestion * 100, 0, 100)
+
+    if traffic_score < 25:
+        traffic_level = "Low"
+    elif traffic_score < 50:
+        traffic_level = "Medium"
+    elif traffic_score < 75:
+        traffic_level = "High"
+    else:
+        traffic_level = "Very High"
+
+    return float(traffic_score), traffic_level
+
+
+# ============================================================
 # RANGE CONSUMPTION
 # ============================================================
 
@@ -1678,26 +1712,57 @@ Current vehicle:
         )
 
 
-        traffic = st.slider(
-            "Traffic Level",
-            0,
-            100,
-            40,
-            key="range_traffic"
+        # ----------------------------------------------------
+        # AUTOMATIC TRAFFIC DETECTION
+        # ----------------------------------------------------
+        free_flow_speed = st.number_input(
+            "Normal Road Speed (km/h)",
+            min_value=10.0,
+            max_value=180.0,
+            value=float(defaults["speed"]),
+            step=1.0,
+            key="range_free_flow_speed"
         )
 
-
+        traffic_score, traffic_level = calculate_traffic_level(
+            speed,
+            free_flow_speed
+        )
         driving = st.selectbox(
-            "Driving Style",
-            [
-                "Eco",
-                "Normal",
-                "Sport",
-                "Aggressive"
-            ],
-            key="range_driving"
+                    "Driving Style",
+                    [
+                        "Eco",
+                        "Normal",
+                        "Sport",
+                        "Aggressive"
+                    ],
+                    key="range_driving"
+                )
+        
+        st.markdown(
+            f"""
+            <div class="info-box">
+
+            🚦 <b>Automatic Traffic Detection</b><br>
+
+            Current Speed: <b>{speed:.1f} km/h</b>
+            <br>
+            Normal Road Speed: <b>{free_flow_speed:.1f} km/h</b>
+            <br>
+            Traffic Score: <b>{traffic_score:.1f}%</b>
+            <br>
+            Traffic Level: <b>{traffic_level}</b>
+
+            </div>
+            """,
+            unsafe_allow_html=True
         )
 
+        # Traffic score is used by the consumption model.
+        traffic = traffic_score
+
+
+        
 
     with col3:
 
@@ -1732,11 +1797,13 @@ Current vehicle:
 
         charging_status = st.selectbox(
             "Charging Status",
-            [
-                "Not Charging",
-                "Slow AC",
-                "Fast AC",
-                "DC Fast"
+            [       
+    "Not Charging",
+    "AC Charging",
+    "DC Fast Charging",
+    "Fully Charged",
+    "Charging Fault"
+
             ],
             key="range_charging"
         )
@@ -1857,6 +1924,10 @@ Current vehicle:
             temperature_model_status
         )
 
+        st.session_state.traffic_score = traffic_score
+        st.session_state.traffic_level = traffic_level
+        st.session_state.free_flow_speed = free_flow_speed
+
 
         # ----------------------------------------------------
         # RESULTS
@@ -1870,7 +1941,7 @@ Current vehicle:
         )
 
 
-        c1, c2, c3, c4, c5, c6 = st.columns(6)
+        c1, c2, c3, c4, c5 = st.columns(5)
 
 
         metrics = [
@@ -1891,6 +1962,12 @@ Current vehicle:
                 "Battery SOC",
                 f"{soc}%",
                 "Current charge"
+            ),
+
+            (
+                "🚦 Traffic",
+                traffic_level,
+                f"{traffic_score:.1f}% congestion"
             ),
 
             (
@@ -1937,46 +2014,7 @@ Current vehicle:
                 )
 
 
-        with c6:
-
-            if estimated_range >= 250:
-
-                status = "Excellent"
-
-            elif estimated_range >= 150:
-
-                status = "Good"
-
-            elif estimated_range >= 80:
-
-                status = "Moderate"
-
-            else:
-
-                status = "Low"
-
-
-            st.markdown(
-                f"""
-<div class="metric-card">
-
-<div class="metric-title">
-Range Status
-</div>
-
-<div class="metric-value"
-style="font-size:21px;">
-{status}
-</div>
-
-<div class="metric-small">
-Current conditions
-</div>
-
-</div>
-""",
-                unsafe_allow_html=True
-            )
+    
 
 
         # ----------------------------------------------------
@@ -2566,7 +2604,7 @@ other operating conditions to estimate battery temperature.
         )
 
 
-        c1, c2, c3, c4, c5 = st.columns(5)
+        c1, c2, c3, c4 = st.columns(4)
 
 
         battery_metrics = [
@@ -2593,18 +2631,12 @@ other operating conditions to estimate battery temperature.
                 "📉 Degradation",
                 f"{degradation:.1f}%",
                 "Estimated loss"
-            ),
-
-            (
-                "🤖 Source",
-                model_status,
-                "Temperature engine"
             )
         ]
 
 
         for column, metric in zip(
-            [c1, c2, c3, c4, c5],
+            [c1, c2, c3, c4],
             battery_metrics
         ):
 
@@ -3586,12 +3618,12 @@ The dashboard will automatically display:
 {range_icon}
 <b>{range_status} Range Performance</b>
 
-<br><br>
+<br>
 
 Estimated driving range:
 <b>{estimated_range:.1f} km</b>
 
-<br><br>
+<br>
 
 Energy consumption:
 <b>{consumption:.1f} kWh/100 km</b>
@@ -4342,7 +4374,7 @@ enter internal battery temperature.
 
 <li>Ambient Temperature</li>
 
-<li>Traffic Level</li>
+<li>Automatic Traffic Detection</li>
 
 <li>Terrain</li>
 
