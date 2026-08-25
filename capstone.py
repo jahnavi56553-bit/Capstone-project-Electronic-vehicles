@@ -42,14 +42,34 @@ html, body, [class*="css"] {
 }
 
 .stApp {
+    min-height: 100vh;
+    color: #f5fbff;
     background:
-        radial-gradient(circle at 10% 10%, rgba(0,230,118,0.12), transparent 25%),
-        radial-gradient(circle at 90% 20%, rgba(0,188,212,0.12), transparent 25%),
-        linear-gradient(135deg, #06111f 0%, #0a1828 50%, #06111f 100%);
-    color: white;
+        radial-gradient(circle at 8% 8%, rgba(0, 255, 170, 0.18) 0, transparent 24%),
+        radial-gradient(circle at 92% 12%, rgba(0, 210, 255, 0.20) 0, transparent 25%),
+        radial-gradient(circle at 50% 100%, rgba(83, 68, 255, 0.16) 0, transparent 30%),
+        linear-gradient(135deg, #020817 0%, #07152b 38%, #061b2b 68%, #020817 100%);
+    background-attachment: fixed;
+}
+
+/* Subtle futuristic grid overlay */
+.stApp::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.20;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 42px 42px;
+    mask-image: linear-gradient(to bottom, black, transparent 85%);
 }
 
 .block-container {
+    position: relative;
+    z-index: 1;
     max-width: 1450px;
     padding-top: 1.2rem;
     padding-bottom: 3rem;
@@ -63,103 +83,154 @@ header[data-testid="stHeader"] {
     background: transparent;
 }
 
+/* Top glass navigation */
 .topbar {
-    background: linear-gradient(135deg, rgba(10,27,45,0.98), rgba(6,20,34,0.98));
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px;
-    padding: 16px 22px;
+    background:
+        linear-gradient(135deg, rgba(8, 25, 45, 0.92), rgba(5, 19, 35, 0.78));
+    border: 1px solid rgba(120, 230, 255, 0.16);
+    border-radius: 24px;
+    padding: 18px 24px;
     margin-bottom: 15px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.38),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+    backdrop-filter: blur(18px);
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 14px;
 }
 
 .logo-icon {
-    font-size: 38px;
+    font-size: 42px;
+    filter: drop-shadow(0 0 14px rgba(0,230,118,0.65));
 }
 
 .logo-title {
     font-size: 24px;
     font-weight: 800;
-    color: white;
+    color: #ffffff;
+    letter-spacing: -0.4px;
 }
 
 .logo-subtitle {
     font-size: 11px;
-    color: #8fa4b8;
+    color: #8fa9bf;
+    margin-top: 3px;
 }
 
+/* Navigation buttons */
 div.stButton > button {
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: rgba(15,34,53,0.9);
-    color: #d9e4ee;
-    font-weight: 600;
-    height: 46px;
-    transition: all 0.2s ease;
+    border-radius: 14px;
+    border: 1px solid rgba(130, 220, 255, 0.13);
+    background: linear-gradient(135deg, rgba(13,38,61,0.92), rgba(8,25,43,0.92));
+    color: #dcecf7;
+    font-weight: 650;
+    height: 48px;
+    transition: all 0.22s ease;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.16);
 }
 
 div.stButton > button:hover {
-    background: linear-gradient(90deg, rgba(0,230,118,0.20), rgba(0,188,212,0.20));
-    border-color: rgba(0,230,118,0.35);
+    background: linear-gradient(135deg, rgba(0,230,118,0.22), rgba(0,210,255,0.20));
+    border-color: rgba(0,240,180,0.42);
     color: white;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,230,180,0.16);
 }
 
+/* Hero */
 .hero {
-    background: linear-gradient(135deg, rgba(0,230,118,0.12), rgba(0,188,212,0.08));
-    border: 1px solid rgba(0,230,118,0.18);
-    border-radius: 24px;
-    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 85% 20%, rgba(0,220,255,0.18), transparent 28%),
+        radial-gradient(circle at 15% 90%, rgba(0,255,150,0.12), transparent 28%),
+        linear-gradient(135deg, rgba(8,38,57,0.88), rgba(7,25,45,0.76));
+    border: 1px solid rgba(70, 230, 210, 0.22);
+    border-radius: 28px;
+    padding: 48px;
     margin-bottom: 30px;
+    box-shadow:
+        0 25px 70px rgba(0,0,0,0.30),
+        inset 0 1px 0 rgba(255,255,255,0.07);
+    backdrop-filter: blur(16px);
+}
+
+.hero::after {
+    content: "⚡";
+    position: absolute;
+    right: 7%;
+    top: 18%;
+    font-size: 120px;
+    opacity: 0.08;
+    transform: rotate(12deg);
+    filter: blur(1px);
 }
 
 .hero-title {
-    font-size: 48px;
+    font-size: 50px;
     font-weight: 800;
-    line-height: 1.1;
-    background: linear-gradient(90deg, #00e676, #00d9ff);
+    line-height: 1.08;
+    background: linear-gradient(90deg, #55ffb0, #20e5ff 55%, #8b8cff);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    letter-spacing: -1.2px;
 }
 
 .hero-subtitle {
-    color: #aebfd0;
+    color: #b8cddd;
     font-size: 17px;
-    line-height: 1.6;
-    margin-top: 12px;
+    line-height: 1.7;
+    margin-top: 14px;
+    max-width: 850px;
 }
 
+/* Headings */
 .section-title {
     font-size: 30px;
     font-weight: 800;
-    margin-top: 25px;
+    margin-top: 28px;
     margin-bottom: 20px;
+    color: #f2f9ff;
+}
+
+/* Glass cards */
+.card,
+.feature-card {
+    background:
+        linear-gradient(145deg, rgba(15,40,62,0.82), rgba(6,23,42,0.78));
+    border: 1px solid rgba(150, 220, 255, 0.12);
+    border-radius: 22px;
+    padding: 25px;
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.24),
+        inset 0 1px 0 rgba(255,255,255,0.045);
+    backdrop-filter: blur(14px);
 }
 
 .card {
-    background: rgba(13,31,49,0.88);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px;
-    padding: 25px;
     margin-bottom: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
 }
 
 .feature-card {
-    background: rgba(13,31,49,0.90);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 20px;
-    padding: 25px;
     min-height: 200px;
+    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(0,240,190,0.30);
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.32),
+        0 0 28px rgba(0,220,190,0.07);
 }
 
 .feature-icon {
-    font-size: 40px;
+    font-size: 42px;
+    filter: drop-shadow(0 0 12px rgba(0,230,180,0.28));
 }
 
 .feature-title {
@@ -169,86 +240,222 @@ div.stButton > button:hover {
 }
 
 .feature-text {
-    color: #9eb0c2;
-    line-height: 1.5;
+    color: #9fb5c8;
+    line-height: 1.55;
     font-size: 14px;
     margin-top: 8px;
 }
 
+/* Metrics */
 .metric-card {
-    background: linear-gradient(145deg, rgba(15,43,62,0.95), rgba(8,25,41,0.95));
-    border: 1px solid rgba(0,230,118,0.15);
-    border-radius: 18px;
+    background:
+        linear-gradient(145deg, rgba(13,50,66,0.92), rgba(7,27,45,0.92));
+    border: 1px solid rgba(0,240,180,0.18);
+    border-radius: 19px;
     padding: 20px;
     text-align: center;
     min-height: 135px;
+    box-shadow:
+        0 12px 30px rgba(0,0,0,0.22),
+        inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 .metric-title {
-    color: #8ea4b8;
+    color: #91a9bc;
     font-size: 13px;
 }
 
 .metric-value {
     font-size: 29px;
     font-weight: 800;
-    color: #00e676;
+    color: #39f5a5;
     margin-top: 8px;
+    text-shadow: 0 0 18px rgba(57,245,165,0.18);
 }
 
 .metric-small {
-    color: #8196aa;
+    color: #8198ac;
     font-size: 12px;
     margin-top: 5px;
 }
 
+/* Result panels */
 .result-good {
-    background: rgba(0,230,118,0.08);
-    border: 1px solid rgba(0,230,118,0.30);
-    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(0,230,118,0.12), rgba(0,180,140,0.05));
+    border: 1px solid rgba(0,230,118,0.34);
+    border-radius: 17px;
     padding: 18px;
+    box-shadow: 0 10px 28px rgba(0,230,118,0.06);
 }
 
 .result-warning {
-    background: rgba(255,193,7,0.08);
-    border: 1px solid rgba(255,193,7,0.30);
-    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(255,193,7,0.12), rgba(255,150,0,0.04));
+    border: 1px solid rgba(255,193,7,0.34);
+    border-radius: 17px;
     padding: 18px;
 }
 
 .result-danger {
-    background: rgba(244,67,54,0.08);
-    border: 1px solid rgba(244,67,54,0.30);
-    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(244,67,54,0.13), rgba(180,30,70,0.05));
+    border: 1px solid rgba(244,67,54,0.34);
+    border-radius: 17px;
     padding: 18px;
 }
 
+/* Info box */
 .info-box {
-    background: rgba(0,188,212,0.07);
-    border-left: 4px solid #00bcd4;
-    border-radius: 10px;
+    background:
+        linear-gradient(135deg, rgba(0,188,212,0.10), rgba(0,100,180,0.045));
+    border: 1px solid rgba(0,210,255,0.14);
+    border-left: 4px solid #19dfff;
+    border-radius: 13px;
     padding: 16px;
     margin: 20px 0;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.12);
 }
 
+/* Streamlit inputs */
+div[data-baseweb="input"] > div,
+div[data-baseweb="select"] > div,
+.stNumberInput input,
+.stTextInput input {
+    background: rgba(5,20,36,0.78) !important;
+    border-color: rgba(130,210,240,0.15) !important;
+    color: #f5fbff !important;
+    border-radius: 12px !important;
+}
+
+div[data-baseweb="select"] * {
+    color: #f5fbff !important;
+}
+
+.stSlider > div > div > div {
+    border-radius: 20px;
+}
+
+.stCheckbox label,
+.stRadio label,
+.stSelectbox label,
+.stNumberInput label,
+.stTextInput label {
+    color: #c6d8e7 !important;
+    font-weight: 600 !important;
+}
+
+/* Dataframes */
+div[data-testid="stDataFrame"] {
+    border: 1px solid rgba(120,220,255,0.12);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+/* Footer */
 .footer {
     text-align: center;
-    color: #71879b;
-    border-top: 1px solid rgba(255,255,255,0.06);
+    color: #71899d;
+    border-top: 1px solid rgba(255,255,255,0.07);
     margin-top: 60px;
     padding-top: 25px;
 }
 
+/* Mobile */
 @media (max-width: 768px) {
     .hero-title { font-size: 34px; }
-    .hero { padding: 25px; }
-    .logo-title { font-size: 20px; }
+    .hero { padding: 28px; }
+    .logo-title { font-size: 19px; }
+    .hero::after { display: none; }
 }
 </style>
 """,
     unsafe_allow_html=True
 )
+import os
+import base64
+import streamlit as st
 
+# ============================================================
+# VIDEO BACKGROUND
+# ============================================================
+
+def set_video_background(video_file):
+    if not os.path.exists(video_file):
+        st.warning(f"Video not found: {video_file}")
+        return
+
+    with open(video_file, "rb") as f:
+        video_bytes = f.read()
+
+    video_base64 = base64.b64encode(video_bytes).decode()
+
+    st.markdown(
+        f"""
+        <style>
+
+        /* Full-screen video */
+        .video-background {{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -2;
+        }}
+
+        .video-background video {{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }}
+
+        /* Dark emerald overlay */
+        .video-overlay {{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(0, 50, 35, 0.75),
+                    rgba(0, 20, 15, 0.65)
+                );
+            z-index: -1;
+        }}
+
+        /* Make Streamlit background transparent */
+        .stApp {{
+            background: transparent !important;
+        }}
+
+        [data-testid="stAppViewContainer"] {{
+            background: transparent !important;
+        }}
+
+        [data-testid="stHeader"] {{
+            background: transparent !important;
+        }}
+
+        </style>
+
+        <div class="video-background">
+            <video autoplay muted loop playsinline>
+                <source
+                    src="data:video/mp4;base64,{video_base64}"
+                    type="video/mp4"
+                >
+            </video>
+        </div>
+
+        <div class="video-overlay"></div>
+        """,
+        unsafe_allow_html=True
+    )
+
+
+# Add your video here
+set_video_background("video.mp4")
 
 # ============================================================
 # GENERIC MODEL LOADER
@@ -2509,7 +2716,7 @@ designed to estimate real-world range, analyse battery health and
 compare EV running costs with petrol vehicles.
 </p>
 
-<h3>🎯 Project Objectives</h3>
+<h3>🎯 Our Objectives</h3>
 <ul>
 <li>Smart EV range estimation</li>
 <li>Automatic electrical load estimation</li>
@@ -2519,6 +2726,16 @@ compare EV running costs with petrol vehicles.
 <li>EV versus petrol cost comparison</li>
 <li>Interactive analytics dashboard</li>
 </ul>
+
+<h3>⚡Why This Project?</h3>
+<p>  EV range is affected by much more than the battery's current charge level.
+Temperature,speed,traffic,driving style, vehicle load,air conditioning and 
+battery aging can significantly influence energy consumption.Our system combines 
+these factors with machine learning to provide a more dynamic estimation of
+range and battery health.
+</p>
+
+
 
 <h3>🤖 Machine Learning Models</h3>
 <p>
@@ -2547,6 +2764,7 @@ vehicle weight, speed, SOC, driving style, terrain, passenger load,
 climate control and ambient temperature.
 </p>
 
+
 <h3>🌡️ Smart Battery Temperature Estimation</h3>
 <p>
 Battery temperature is estimated from operating conditions.
@@ -2563,6 +2781,13 @@ uses it; otherwise the built-in smart estimator is used.
 <li>Vehicle Age</li>
 <li>Average Speed</li>
 <li>Vehicle Weight</li>
+</ul>
+
+<h3>Project By</h3>
+<h6>Team: Neuranova</h6>
+<ul>
+<li>Jahnavi</li>
+<li>Lirishka</li>
 </ul>
 
 </div>
