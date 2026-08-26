@@ -27,139 +27,219 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
+# ============================================================
+# DARK / LIGHT MODE
+# ============================================================
+
+if "dark_mode" not in st.session_state:
+    st.session_state.dark_mode = True
+
+# Theme colors used by the entire application
+if st.session_state.dark_mode:
+    THEME = {
+        "bg": "#020817",
+        "bg_secondary": "#07152b",
+        "text": "#F5FBFF",
+        "text_secondary": "#B8CDDD",
+        "muted": "#8FA9BF",
+        "card": "rgba(15,40,62,0.82)",
+        "card_secondary": "rgba(6,23,42,0.78)",
+        "input": "rgba(5,20,36,0.90)",
+        "border": "rgba(150,220,255,0.16)",
+        "primary": "#39F5A5",
+        "secondary": "#20E5FF",
+        "accent": "#8B8CFF",
+        "button_text": "#FFFFFF",
+        "table_header": "#0B2940",
+        "plot_text": "#F5FBFF",
+        "video_opacity": "0.55",
+        "video_overlay": "rgba(0, 20, 15, 0.58)"
+    }
+else:
+    THEME = {
+        "bg": "#F4F8FC",
+        "bg_secondary": "#EAF2F8",
+        "text": "#17202A",
+        "text_secondary": "#405466",
+        "muted": "#64788A",
+        "card": "rgba(255,255,255,0.92)",
+        "card_secondary": "rgba(246,250,253,0.94)",
+        "input": "#FFFFFF",
+        "border": "rgba(20,80,110,0.16)",
+        "primary": "#008F68",
+        "secondary": "#007EA7",
+        "accent": "#5B5FC7",
+        "button_text": "#FFFFFF",
+        "table_header": "#DCEBF3",
+        "plot_text": "#17202A",
+        "video_opacity": "0.18",
+        "video_overlay": "rgba(245, 250, 255, 0.55)"
+    }
 
 # ============================================================
 # CUSTOM CSS — SAME STYLE
 # ============================================================
 
 st.markdown(
-    """
+    f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-html, body, [class*="css"] {
+html, body, [class*="css"] {{
     font-family: 'Inter', sans-serif;
-}
+}}
 
-.stApp {
+html, body {{
+    background-color: {THEME["bg"]} !important;
+}}
+
+.stApp {{
     min-height: 100vh;
-    color: #f5fbff;
+    color: {THEME["text"]} !important;
     background:
-        radial-gradient(circle at 8% 8%, rgba(0, 255, 170, 0.18) 0, transparent 24%),
-        radial-gradient(circle at 92% 12%, rgba(0, 210, 255, 0.20) 0, transparent 25%),
-        radial-gradient(circle at 50% 100%, rgba(83, 68, 255, 0.16) 0, transparent 30%),
-        linear-gradient(135deg, #020817 0%, #07152b 38%, #061b2b 68%, #020817 100%);
-    background-attachment: fixed;
-}
+        radial-gradient(circle at 8% 8%, rgba(0, 255, 170, 0.10) 0, transparent 24%),
+        radial-gradient(circle at 92% 12%, rgba(0, 210, 255, 0.10) 0, transparent 25%),
+        radial-gradient(circle at 50% 100%, rgba(83, 68, 255, 0.08) 0, transparent 30%),
+        linear-gradient(135deg, {THEME["bg"]} 0%, {THEME["bg_secondary"]} 100%) !important;
+    background-attachment: fixed !important;
+}}
 
-/* Subtle futuristic grid overlay */
-.stApp::before {
+.stApp::before {{
     content: "";
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    opacity: 0.20;
+    opacity: 0.16;
     background-image:
-        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+        linear-gradient(rgba(80,140,160,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(80,140,160,0.045) 1px, transparent 1px);
     background-size: 42px 42px;
     mask-image: linear-gradient(to bottom, black, transparent 85%);
-}
+}}
 
-.block-container {
+.block-container {{
     position: relative;
     z-index: 1;
     max-width: 1450px;
     padding-top: 1.2rem;
     padding-bottom: 3rem;
-}
+}}
 
-#MainMenu, footer {
+#MainMenu, footer {{
     visibility: hidden;
-}
+}}
 
-header[data-testid="stHeader"] {
-    background: transparent;
-}
+header[data-testid="stHeader"] {{
+    background: transparent !important;
+}}
+
+[data-testid="stAppViewContainer"] {{
+    background: transparent !important;
+}}
+
+section[data-testid="stSidebar"] {{
+    background: {THEME["bg_secondary"]} !important;
+    border-right: 1px solid {THEME["border"]};
+}}
+
+section[data-testid="stSidebar"] * {{
+    color: {THEME["text"]} !important;
+}}
+
+section[data-testid="stSidebar"] .stCaption {{
+    color: {THEME["muted"]} !important;
+}}
 
 /* Top glass navigation */
-.topbar {
+.topbar {{
     background:
-        linear-gradient(135deg, rgba(8, 25, 45, 0.92), rgba(5, 19, 35, 0.78));
-    border: 1px solid rgba(120, 230, 255, 0.16);
+        linear-gradient(135deg,
+            rgba(255,255,255,0.10),
+            rgba(255,255,255,0.04));
+    border: 1px solid {THEME["border"]};
     border-radius: 24px;
     padding: 18px 24px;
     margin-bottom: 15px;
     box-shadow:
-        0 20px 60px rgba(0,0,0,0.38),
-        inset 0 1px 0 rgba(255,255,255,0.06);
+        0 20px 60px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.08);
     backdrop-filter: blur(18px);
-}
+}}
 
-.logo {
+.logo {{
     display: flex;
     align-items: center;
     gap: 14px;
-}
+}}
 
-.logo-icon {
+.logo-icon {{
     font-size: 42px;
     filter: drop-shadow(0 0 14px rgba(0,230,118,0.65));
-}
+}}
 
-.logo-title {
+.logo-title {{
     font-size: 24px;
     font-weight: 800;
-    color: #ffffff;
+    color: {THEME["text"]} !important;
     letter-spacing: -0.4px;
-}
+}}
 
-.logo-subtitle {
+.logo-subtitle {{
     font-size: 11px;
-    color: #8fa9bf;
+    color: {THEME["muted"]} !important;
     margin-top: 3px;
-}
+}}
 
 /* Navigation buttons */
-div.stButton > button {
+div.stButton > button {{
     border-radius: 14px;
-    border: 1px solid rgba(130, 220, 255, 0.13);
-    background: linear-gradient(135deg, rgba(13,38,61,0.92), rgba(8,25,43,0.92));
-    color: #dcecf7;
+    border: 1px solid {THEME["border"]};
+    background: linear-gradient(
+        135deg,
+        rgba(80,140,170,0.16),
+        rgba(80,120,150,0.08)
+    );
+    color: {THEME["text"]} !important;
     font-weight: 650;
     height: 48px;
     transition: all 0.22s ease;
-    box-shadow: 0 8px 22px rgba(0,0,0,0.16);
-}
+    box-shadow: 0 8px 22px rgba(0,0,0,0.10);
+}}
 
-div.stButton > button:hover {
-    background: linear-gradient(135deg, rgba(0,230,118,0.22), rgba(0,210,255,0.20));
+div.stButton > button:hover {{
+    background: linear-gradient(
+        135deg,
+        rgba(0,230,118,0.22),
+        rgba(0,210,255,0.20)
+    );
     border-color: rgba(0,240,180,0.42);
-    color: white;
+    color: {THEME["text"]} !important;
     transform: translateY(-3px);
     box-shadow: 0 12px 30px rgba(0,230,180,0.16);
-}
+}}
 
 /* Hero */
-.hero {
+.hero {{
     position: relative;
     overflow: hidden;
     background:
-        radial-gradient(circle at 85% 20%, rgba(0,220,255,0.18), transparent 28%),
-        radial-gradient(circle at 15% 90%, rgba(0,255,150,0.12), transparent 28%),
-        linear-gradient(135deg, rgba(8,38,57,0.88), rgba(7,25,45,0.76));
+        radial-gradient(circle at 85% 20%, rgba(0,220,255,0.14), transparent 28%),
+        radial-gradient(circle at 15% 90%, rgba(0,255,150,0.10), transparent 28%),
+        linear-gradient(135deg,
+            rgba(40,120,140,0.13),
+            rgba(255,255,255,0.035));
     border: 1px solid rgba(70, 230, 210, 0.22);
     border-radius: 28px;
     padding: 48px;
     margin-bottom: 30px;
     box-shadow:
-        0 25px 70px rgba(0,0,0,0.30),
+        0 25px 70px rgba(0,0,0,0.16),
         inset 0 1px 0 rgba(255,255,255,0.07);
     backdrop-filter: blur(16px);
-}
+}}
 
-.hero::after {
+.hero::after {{
     content: "⚡";
     position: absolute;
     right: 7%;
@@ -168,203 +248,345 @@ div.stButton > button:hover {
     opacity: 0.08;
     transform: rotate(12deg);
     filter: blur(1px);
-}
+}}
 
-.hero-title {
+.hero-title {{
     font-size: 50px;
     font-weight: 800;
     line-height: 1.08;
-    background: linear-gradient(90deg, #55ffb0, #20e5ff 55%, #8b8cff);
+    background: linear-gradient(
+        90deg,
+        {THEME["primary"]},
+        {THEME["secondary"]} 55%,
+        {THEME["accent"]}
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -1.2px;
-}
+}}
 
-.hero-subtitle {
-    color: #b8cddd;
+.hero-subtitle {{
+    color: {THEME["text_secondary"]} !important;
     font-size: 17px;
     line-height: 1.7;
     margin-top: 14px;
     max-width: 850px;
-}
+}}
 
-/* Headings */
-.section-title {
+/* Global Streamlit text */
+.stApp p,
+.stApp span,
+.stApp label,
+.stApp div,
+.stApp li,
+.stApp td,
+.stApp th {{
+    color: {THEME["text"]};
+}}
+
+.stApp .stMarkdown p {{
+    color: {THEME["text_secondary"]};
+}}
+
+.stApp h1,
+.stApp h2,
+.stApp h3,
+.stApp h4,
+.stApp h5,
+.stApp h6 {{
+    color: {THEME["text"]} !important;
+}}
+
+.stApp h3 {{
+    color: {THEME["primary"]} !important;
+}}
+
+.section-title {{
     font-size: 30px;
     font-weight: 800;
     margin-top: 28px;
     margin-bottom: 20px;
-    color: #f2f9ff;
-}
+    color: {THEME["text"]} !important;
+}}
 
 /* Glass cards */
 .card,
-.feature-card {
+.feature-card {{
     background:
-        linear-gradient(145deg, rgba(15,40,62,0.82), rgba(6,23,42,0.78));
-    border: 1px solid rgba(150, 220, 255, 0.12);
+        linear-gradient(
+            145deg,
+            {THEME["card"]},
+            {THEME["card_secondary"]}
+        );
+    border: 1px solid {THEME["border"]};
     border-radius: 22px;
     padding: 25px;
+    color: {THEME["text"]};
     box-shadow:
-        0 15px 40px rgba(0,0,0,0.24),
+        0 15px 40px rgba(0,0,0,0.12),
         inset 0 1px 0 rgba(255,255,255,0.045);
     backdrop-filter: blur(14px);
-}
+}}
 
-.card {
+.card {{
     margin-bottom: 20px;
-}
+}}
 
-.feature-card {
+.card p,
+.feature-text {{
+    color: {THEME["text_secondary"]} !important;
+}}
+
+.feature-card {{
     min-height: 200px;
-    transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
-}
+    transition: transform 0.22s ease,
+                border-color 0.22s ease,
+                box-shadow 0.22s ease;
+}}
 
-.feature-card:hover {
+.feature-card:hover {{
     transform: translateY(-6px);
     border-color: rgba(0,240,190,0.30);
     box-shadow:
-        0 20px 50px rgba(0,0,0,0.32),
+        0 20px 50px rgba(0,0,0,0.20),
         0 0 28px rgba(0,220,190,0.07);
-}
+}}
 
-.feature-icon {
+.feature-icon {{
     font-size: 42px;
     filter: drop-shadow(0 0 12px rgba(0,230,180,0.28));
-}
+}}
 
-.feature-title {
+.feature-title {{
     font-size: 21px;
     font-weight: 700;
+    color: {THEME["text"]} !important;
     margin-top: 12px;
-}
+}}
 
-.feature-text {
-    color: #9fb5c8;
+.feature-text {{
     line-height: 1.55;
     font-size: 14px;
     margin-top: 8px;
-}
+}}
 
-/* Metrics */
-.metric-card {
+/* Custom metrics */
+.metric-card {{
     background:
-        linear-gradient(145deg, rgba(13,50,66,0.92), rgba(7,27,45,0.92));
+        linear-gradient(
+            145deg,
+            rgba(0,140,120,0.12),
+            rgba(30,100,140,0.10)
+        );
     border: 1px solid rgba(0,240,180,0.18);
     border-radius: 19px;
     padding: 20px;
     text-align: center;
     min-height: 135px;
+    color: {THEME["text"]};
     box-shadow:
-        0 12px 30px rgba(0,0,0,0.22),
+        0 12px 30px rgba(0,0,0,0.12),
         inset 0 1px 0 rgba(255,255,255,0.05);
-}
+}}
 
-.metric-title {
-    color: #91a9bc;
+.metric-title {{
+    color: {THEME["muted"]} !important;
     font-size: 13px;
-}
+}}
 
-.metric-value {
+.metric-value {{
     font-size: 29px;
     font-weight: 800;
-    color: #39f5a5;
+    color: {THEME["primary"]} !important;
     margin-top: 8px;
     text-shadow: 0 0 18px rgba(57,245,165,0.18);
-}
+}}
 
-.metric-small {
-    color: #8198ac;
+.metric-small {{
+    color: {THEME["muted"]} !important;
     font-size: 12px;
     margin-top: 5px;
-}
+}}
+
+/* Native Streamlit metrics */
+[data-testid="stMetric"] {{
+    background: {THEME["card_secondary"]};
+    border: 1px solid {THEME["border"]};
+    border-radius: 16px;
+    padding: 18px;
+}}
+
+[data-testid="stMetricLabel"] {{
+    color: {THEME["muted"]} !important;
+}}
+
+[data-testid="stMetricValue"] {{
+    color: {THEME["primary"]} !important;
+}}
+
+[data-testid="stMetricDelta"] {{
+    color: {THEME["secondary"]} !important;
+}}
 
 /* Result panels */
-.result-good {
-    background: linear-gradient(135deg, rgba(0,230,118,0.12), rgba(0,180,140,0.05));
+.result-good {{
+    background: linear-gradient(
+        135deg,
+        rgba(0,230,118,0.12),
+        rgba(0,180,140,0.05)
+    );
     border: 1px solid rgba(0,230,118,0.34);
     border-radius: 17px;
     padding: 18px;
+    color: {THEME["text"]} !important;
     box-shadow: 0 10px 28px rgba(0,230,118,0.06);
-}
+}}
 
-.result-warning {
-    background: linear-gradient(135deg, rgba(255,193,7,0.12), rgba(255,150,0,0.04));
+.result-warning {{
+    background: linear-gradient(
+        135deg,
+        rgba(255,193,7,0.12),
+        rgba(255,150,0,0.04)
+    );
     border: 1px solid rgba(255,193,7,0.34);
     border-radius: 17px;
     padding: 18px;
-}
+    color: {THEME["text"]} !important;
+}}
 
-.result-danger {
-    background: linear-gradient(135deg, rgba(244,67,54,0.13), rgba(180,30,70,0.05));
+.result-danger {{
+    background: linear-gradient(
+        135deg,
+        rgba(244,67,54,0.13),
+        rgba(180,30,70,0.05)
+    );
     border: 1px solid rgba(244,67,54,0.34);
     border-radius: 17px;
     padding: 18px;
-}
+    color: {THEME["text"]} !important;
+}}
 
 /* Info box */
-.info-box {
+.info-box {{
     background:
-        linear-gradient(135deg, rgba(0,188,212,0.10), rgba(0,100,180,0.045));
-    border: 1px solid rgba(0,210,255,0.14);
-    border-left: 4px solid #19dfff;
+        linear-gradient(
+            135deg,
+            rgba(0,188,212,0.10),
+            rgba(0,100,180,0.045)
+        );
+    border: 1px solid rgba(0,210,255,0.18);
+    border-left: 4px solid {THEME["secondary"]};
     border-radius: 13px;
     padding: 16px;
     margin: 20px 0;
-    box-shadow: 0 10px 28px rgba(0,0,0,0.12);
-}
+    color: {THEME["text"]} !important;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.08);
+}}
+
+.info-box p,
+.info-box li {{
+    color: {THEME["text_secondary"]} !important;
+}}
 
 /* Streamlit inputs */
 div[data-baseweb="input"] > div,
 div[data-baseweb="select"] > div,
 .stNumberInput input,
-.stTextInput input {
-    background: rgba(5,20,36,0.78) !important;
-    border-color: rgba(130,210,240,0.15) !important;
-    color: #f5fbff !important;
+.stTextInput input,
+textarea {{
+    background: {THEME["input"]} !important;
+    border-color: {THEME["border"]} !important;
+    color: {THEME["text"]} !important;
     border-radius: 12px !important;
-}
+}}
 
-div[data-baseweb="select"] * {
-    color: #f5fbff !important;
-}
+div[data-baseweb="select"] *,
+div[data-baseweb="popover"] *,
+div[role="listbox"] * {{
+    color: {THEME["text"]} !important;
+}}
 
-.stSlider > div > div > div {
+div[data-baseweb="popover"] {{
+    background: {THEME["card_secondary"]} !important;
+}}
+
+input::placeholder,
+textarea::placeholder {{
+    color: {THEME["muted"]} !important;
+}}
+
+.stSlider > div > div > div {{
     border-radius: 20px;
-}
+}}
 
 .stCheckbox label,
 .stRadio label,
 .stSelectbox label,
 .stNumberInput label,
-.stTextInput label {
-    color: #c6d8e7 !important;
+.stTextInput label,
+.stSlider label {{
+    color: {THEME["text"]} !important;
     font-weight: 600 !important;
-}
+}}
+
+/* Toggle */
+[data-testid="stToggle"] label {{
+    color: {THEME["text"]} !important;
+    font-weight: 700 !important;
+}}
 
 /* Dataframes */
-div[data-testid="stDataFrame"] {
-    border: 1px solid rgba(120,220,255,0.12);
+div[data-testid="stDataFrame"] {{
+    border: 1px solid {THEME["border"]};
     border-radius: 14px;
     overflow: hidden;
-}
+}}
+
+div[data-testid="stDataFrame"] * {{
+    color: {THEME["text"]} !important;
+}}
+
+/* Expanders */
+[data-testid="stExpander"] {{
+    background: {THEME["card_secondary"]} !important;
+    border: 1px solid {THEME["border"]} !important;
+    border-radius: 14px;
+}}
+
+[data-testid="stExpander"] summary {{
+    color: {THEME["text"]} !important;
+}}
+
+/* Alerts */
+[data-testid="stAlert"] {{
+    color: {THEME["text"]} !important;
+}}
+
+/* Divider */
+hr {{
+    border-color: {THEME["border"]} !important;
+}}
 
 /* Footer */
-.footer {
+.footer {{
     text-align: center;
-    color: #71899d;
-    border-top: 1px solid rgba(255,255,255,0.07);
+    color: {THEME["muted"]} !important;
+    border-top: 1px solid {THEME["border"]};
     margin-top: 60px;
     padding-top: 25px;
-}
+}}
+
+.footer * {{
+    color: {THEME["muted"]} !important;
+}}
 
 /* Mobile */
-@media (max-width: 768px) {
-    .hero-title { font-size: 34px; }
-    .hero { padding: 28px; }
-    .logo-title { font-size: 19px; }
-    .hero::after { display: none; }
-}
+@media (max-width: 768px) {{
+    .hero-title {{ font-size: 34px; }}
+    .hero {{ padding: 28px; }}
+    .logo-title {{ font-size: 19px; }}
+    .hero::after {{ display: none; }}
+}}
 </style>
 """,
     unsafe_allow_html=True
@@ -406,35 +628,19 @@ def set_video_background(video_file):
             width: 100%;
             height: 100%;
             object-fit: cover;
+            opacity: {THEME["video_opacity"]};
         }}
 
-        /* Dark emerald overlay */
+        /* Theme-aware video overlay */
         .video-overlay {{
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background:
-                linear-gradient(
-                    135deg,
-                    rgba(0, 50, 35, 0.75),
-                    rgba(0, 20, 15, 0.65)
-                );
+            background: {THEME["video_overlay"]};
             z-index: -1;
-        }}
-
-        /* Make Streamlit background transparent */
-        .stApp {{
-            background: transparent !important;
-        }}
-
-        [data-testid="stAppViewContainer"] {{
-            background: transparent !important;
-        }}
-
-        [data-testid="stHeader"] {{
-            background: transparent !important;
+            pointer-events: none;
         }}
 
         </style>
@@ -701,10 +907,12 @@ Intelligent EV Range & Battery Analytics
 
 
 # ============================================================
-# NAVIGATION
+# NAVIGATION + DARK/LIGHT MODE BUTTON
 # ============================================================
 
-nav1, nav2, nav3, nav4, nav5, nav6 = st.columns(6)
+nav1, nav2, nav3, nav4, nav5, nav6, nav7 = st.columns(
+    [1.15, 1.15, 1.15, 1.15, 1.35, 1.0, 1.0]
+)
 
 with nav1:
     if st.button("🏠 Home", key="nav_home", use_container_width=True):
@@ -729,6 +937,17 @@ with nav5:
 with nav6:
     if st.button("ℹ️ About", key="nav_about", use_container_width=True):
         st.session_state.page = "About"
+
+with nav7:
+    dark_mode = st.toggle(
+        "Dark Mode",
+        value=st.session_state.dark_mode,
+        key="dark_mode_toggle"
+    )
+
+    if dark_mode != st.session_state.dark_mode:
+        st.session_state.dark_mode = dark_mode
+        st.rerun()
 
 page = st.session_state.page
 st.markdown("<br>", unsafe_allow_html=True)
@@ -1625,7 +1844,7 @@ Traffic Level: <b>{traffic_level}</b>
         fig.update_layout(
             height=350,
             paper_bgcolor="rgba(0,0,0,0)",
-            font={"color": "white"}
+            font={"color": THEME["plot_text"]}
         )
 
         st.plotly_chart(fig, use_container_width=True)
@@ -1718,7 +1937,7 @@ High thermal load may increase battery degradation.
         fig.update_layout(
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            font_color="white"
+            font_color=THEME["plot_text"]
         )
 
         st.plotly_chart(fig, use_container_width=True)
@@ -1955,7 +2174,7 @@ other operating conditions to estimate battery temperature.
         fig.update_layout(
             height=350,
             paper_bgcolor="rgba(0,0,0,0)",
-            font={"color": "white"}
+            font={"color": THEME["plot_text"]}
         )
 
         st.plotly_chart(fig, use_container_width=True)
@@ -2152,7 +2371,7 @@ elif page == "EV vs Petrol":
         fig.update_layout(
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            font_color="white"
+            font_color=THEME["plot_text"]
         )
 
         st.plotly_chart(fig, use_container_width=True)
@@ -2444,7 +2663,7 @@ Energy consumption: <b>{consumption:.1f} kWh/100 km</b>
             fig_soc.update_layout(
                 height=350,
                 paper_bgcolor="rgba(0,0,0,0)",
-                font={"color": "white"}
+                font={"color": THEME["plot_text"]}
             )
 
             st.plotly_chart(fig_soc, use_container_width=True)
@@ -2477,7 +2696,7 @@ Energy consumption: <b>{consumption:.1f} kWh/100 km</b>
                 fig_temp.update_layout(
                     height=350,
                     paper_bgcolor="rgba(0,0,0,0)",
-                    font={"color": "white"}
+                    font={"color": THEME["plot_text"]}
                 )
 
                 st.plotly_chart(fig_temp, use_container_width=True)
@@ -2510,7 +2729,7 @@ Energy consumption: <b>{consumption:.1f} kWh/100 km</b>
         fig_energy.update_layout(
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            font_color="white"
+            font_color=THEME["plot_text"]
         )
 
         st.plotly_chart(fig_energy, use_container_width=True)
@@ -2541,7 +2760,7 @@ Energy consumption: <b>{consumption:.1f} kWh/100 km</b>
         fig_performance.update_layout(
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            font_color="white"
+            font_color=THEME["plot_text"]
         )
 
         st.plotly_chart(fig_performance, use_container_width=True)
